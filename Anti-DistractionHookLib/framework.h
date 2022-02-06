@@ -6,7 +6,10 @@
 
 #define DLLEXPORT _declspec(dllexport) 
 
+#ifdef __cplusplus
 extern "C" {
+#endif
+
 	DLLEXPORT BOOL InstallKeyboardHook();
 	DLLEXPORT BOOL UninstallKeyboardHook();
 	DLLEXPORT void SetExceptedKey(DWORD key,BOOL enable);
@@ -14,4 +17,7 @@ extern "C" {
 
 	DLLEXPORT BOOL InstallMouseHook();
 	DLLEXPORT BOOL UninstallMouseHook();
+
+#ifdef __cplusplus
 }
+#endif

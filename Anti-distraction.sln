@@ -3,12 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31911.196
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Anti-distractionGUI", "Anti-distractionGUI\Anti-distractionGUI.vcxproj", "{1BFFE632-1DA4-492D-96E8-189D4685DB33}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Anti-DistractionGui", "Anti-DistractionGui\Anti-DistractionGui.vcxproj", "{1BFFE632-1DA4-492D-96E8-189D4685DB33}"
 	ProjectSection(ProjectDependencies) = postProject
 		{A29FBF0C-BC0E-45E4-A4DC-21AAB0292EFA} = {A29FBF0C-BC0E-45E4-A4DC-21AAB0292EFA}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HookLib", "HookLib\HookLib.vcxproj", "{A29FBF0C-BC0E-45E4-A4DC-21AAB0292EFA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Anti-DistractionHookLib", "Anti-DistractionHookLib\Anti-DistractionHookLib.vcxproj", "{A29FBF0C-BC0E-45E4-A4DC-21AAB0292EFA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
