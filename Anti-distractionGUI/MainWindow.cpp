@@ -119,9 +119,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui.exitCodeSpinBox->setEnabled(ui.killTaskCheckBox->isChecked());
 
     connect(ui.lockKeyboardCheckBox, &QCheckBox::stateChanged, [this](int state) {
-        ui.exceptedKeyLineEdit->setEnabled(state);
+        ui.excludedKeysLineEdit->setEnabled(state);
         });
-    ui.exceptedKeyLineEdit->setEnabled(ui.lockKeyboardCheckBox->isChecked());
+    ui.excludedKeysLineEdit->setEnabled(ui.lockKeyboardCheckBox->isChecked());
 
 }
 
@@ -140,7 +140,7 @@ void MainWindow::timerTimeout()
             process = processTool.GetNextProcess();
         }
     }
-
+    //Debug下可使用delete键退出，release下删除
 #ifdef _DEBUG
     if (GetKeyState(VK_DELETE) & 0x8000)
         this->Stop();
@@ -197,11 +197,11 @@ void MainWindow::WriteSetting()
     settings.setValue("last_time", ui.lastTimeEdit->time().toString("hh:mm:ss"));
     settings.setValue("delay", ui.delaySpinBox->value());
     settings.setValue("frequency", ui.frequencySpinBox->value());
-    settings.setValue("lockMouse", ui.lockMouseCheckBox->isChecked());
-    settings.setValue("lockKeyboard", ui.lockKeyboardCheckBox->isChecked());
-    settings.setValue("keysExcepted", ui.exceptedKeyLineEdit->text());
-    settings.setValue("killTask", ui.killTaskCheckBox->isChecked());
-    settings.setValue("taskNames", ui.taskNameTextEdit->toPlainText());
+    settings.setValue("lock_mouse", ui.lockMouseCheckBox->isChecked());
+    settings.setValue("lock_keyboard", ui.lockKeyboardCheckBox->isChecked());
+    settings.setValue("excluded_keys", ui.excludedKeysLineEdit->text());
+    settings.setValue("kill_task", ui.killTaskCheckBox->isChecked());
+    settings.setValue("task_name", ui.taskNameTextEdit->toPlainText());
 }
 
 void MainWindow::LoadSetting()
@@ -209,13 +209,13 @@ void MainWindow::LoadSetting()
     ui.lastTimeEdit->setTime(QTime::fromString(settings.value("last_time", "00:40:00").toString(), "hh:mm:ss"));
     ui.delaySpinBox->setValue(settings.value("delay", 10).toInt());
     ui.frequencySpinBox->setValue(settings.value("frequency", 10).toInt());
-    ui.lockMouseCheckBox->setChecked(settings.value("lockMouse", true).toBool());
-    ui.lockKeyboardCheckBox->setChecked(settings.value("lockKeyboard", true).toBool());
-    ui.exceptedKeyLineEdit->setText(settings.value("keysExcepted").toString());
-    ui.killTaskCheckBox->setChecked(settings.value("killTask", true).toBool());
-    ui.taskNameTextEdit->setText(settings.value("taskNames").toString());
+    ui.lockMouseCheckBox->setChecked(settings.value("lock_mouse", true).toBool());
+    ui.lockKeyboardCheckBox->setChecked(settings.value("lock_keyboard", true).toBool());
+    ui.excludedKeysLineEdit->setText(settings.value("excluded_keys").toString());
+    ui.killTaskCheckBox->setChecked(settings.value("kill_task", true).toBool());
+    ui.taskNameTextEdit->setText(settings.value("task_name").toString());
 
-    ui.encourageText->setText(settings.value("encourageText", "KEEP FINGHTING!").toString());
+    ui.encourageText->setText(settings.value("slogan", "KEEP FINGHTING!").toString());
     ui.encourageText->setFont(QFont(settings.value("font", "Arial Black").toString(),20, -1, true));
 }
 
@@ -255,7 +255,7 @@ void MainWindow::InstallKeyboardHook()
     if (installHookFunc) {
         resetExceptedKeysFunc();
 
-        QStringList keys = ui.exceptedKeyLineEdit->text().split(',');
+        QStringList keys = ui.excludedKeysLineEdit->text().split(',');
 
         for (auto i : keys) {
             if (i.size() == 1 && i[0].isLetterOrNumber())

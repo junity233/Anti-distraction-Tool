@@ -4,14 +4,14 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="MainWindow.cpp" line="224"/>
+        <location filename="MainWindow.cpp" line="226"/>
         <source>Note</source>
         <translatorcomment>
 </translatorcomment>
         <translation>提示</translation>
     </message>
     <message>
-        <location filename="MainWindow.cpp" line="264"/>
+        <location filename="MainWindow.cpp" line="266"/>
         <source>Unknown key:%1</source>
         <translation>未知按键:%1</translation>
     </message>
@@ -41,7 +41,7 @@
     <message>
         <location filename="MainWindow.ui" line="86"/>
         <source> Seconds</source>
-        <translation>秒</translation>
+        <translation> 秒</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="98"/>
@@ -75,7 +75,8 @@
     </message>
     <message>
         <location filename="MainWindow.ui" line="167"/>
-        <source>Keys excepted</source>
+        <source>Excluded keys.</source>
+        <oldsource>Keys excepted</oldsource>
         <translation>排除的键</translation>
     </message>
     <message>

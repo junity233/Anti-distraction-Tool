@@ -35,6 +35,8 @@ LRESULT CALLBACK KeyboardHookHandle(int nCode, WPARAM wParam, LPARAM lParam)
         return CallNextHookEx(keyboardHook, nCode, wParam, lParam);
     }
     DWORD vkCode = ((LPKBDLLHOOKSTRUCT)lParam)->vkCode;
+
+    //debug下排除delete键
 #ifdef _DEBUG
     if (vkCode == VK_DELETE)
         return CallNextHookEx(keyboardHook, nCode, wParam, lParam);

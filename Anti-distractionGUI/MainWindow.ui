@@ -162,9 +162,9 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="exceptedKeyLineEdit">
+        <widget class="QLineEdit" name="excludedKeysLineEdit">
          <property name="placeholderText">
-          <string>Keys excepted</string>
+          <string>Excluded keys.</string>
          </property>
         </widget>
        </item>
@@ -195,7 +195,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="placeholderText">
-          <string>Input the process name like &quot;steam.exe&quot; here</string>
+          <string>Input process names like &quot;steam.exe&quot; here</string>
          </property>
         </widget>
        </item>
