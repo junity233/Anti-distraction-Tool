@@ -24,6 +24,7 @@
     <ProjectGuid>{a29fbf0c-bc0e-45e4-a4dc-21aab0292efa}</ProjectGuid>
     <RootNamespace>HookLib</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Anti-DistractionHookLib</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
