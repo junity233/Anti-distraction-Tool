@@ -1,0 +1,2 @@
+# HookLib
+与Hook有关的代码，包括鼠标钩子、键盘钩子以及CreateProcess和OpenProcess两个API的Hook代码
