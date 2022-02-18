@@ -26,7 +26,7 @@
     <message>
         <location filename="MainWindow.ui" line="50"/>
         <source>Start Up</source>
-        <translation>开始</translation>
+        <translation>启动</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="58"/>
@@ -77,7 +77,7 @@
         <location filename="MainWindow.ui" line="167"/>
         <source>Excluded keys.</source>
         <oldsource>Keys excepted</oldsource>
-        <translation>排除的键</translation>
+        <translation>排除的键。</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="174"/>
