@@ -21,7 +21,7 @@ private:
     Ui::MainWindowClass ui;
 
     QTimer timer;
-    QTime endTime;
+    QTime lastTime;//记录已经开始了多久
     QStringList processNames;
     QSettings settings;
 

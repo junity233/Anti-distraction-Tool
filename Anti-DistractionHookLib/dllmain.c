@@ -10,15 +10,20 @@ static HHOOK keyboardHook = NULL, mouseHook = NULL;
 
 static HINSTANCE hins = NULL;
 
-#pragma data_seg("shared")
+#pragma data_seg("shared")                  //设置为共享内存
 
-static DWORD protectedProcessID = 0;
-static WCHAR dllFullPath[MAX_PATH] = L"";
+static DWORD protectedProcessID = 0;        //进程防杀主进程的PID——该进程会被保护
+static WCHAR dllFullPath[MAX_PATH] = L"";   //hook.dll的路径（其他进程无法直接获取）
 
 #pragma data_seg()
 #pragma comment(linker, "/SECTION:shared,RWS")
 
+
 static BOOL exceptedKeys[0xff];
+
+/**
+ * 几个API Hook
+*/
 
 static HANDLE (WINAPI *orginOpenProcess)(DWORD, BOOL, DWORD) = OpenProcess;
 
@@ -49,9 +54,27 @@ static BOOL(WINAPI *orginCreateProcessW)(
     ) = CreateProcessW;
 
 
+/**
+ * @brief 安装进程防杀到一个进程
+ * @param hProcess 
+ * @return 
+*/
 static BOOL InstallProcPectHookForProcess(HANDLE hProcess);
+/**
+ * @brief 从一个进程中卸载进程防杀
+ * @param pid 
+ * @return 
+*/
 static BOOL UninstallProcPectHookForProcess(DWORD pid);
+/**
+ * @brief Hook进程防杀的API
+ * @return 
+*/
 static BOOL HookAPI();
+/**
+ * @brief Unhook进程防杀的API
+ * @return 
+*/
 static BOOL UnhookAPI();
 
 BOOL APIENTRY DllMain( HMODULE hModule,
@@ -59,13 +82,11 @@ BOOL APIENTRY DllMain( HMODULE hModule,
                        LPVOID lpReserved
                      )
 {
-    BOOL res;
-
     switch (ul_reason_for_call)
     {
     case DLL_PROCESS_ATTACH:        
         hins = hModule;
-        res = HookAPI();
+        HookAPI();              //加载DLL时，hook相关API
 
         break;
     case DLL_THREAD_ATTACH:
@@ -73,19 +94,21 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     case DLL_THREAD_DETACH:
         break;
     case DLL_PROCESS_DETACH:
-        UnhookAPI();
+        UnhookAPI();            //卸载时，也卸载API
         break;
     }
 
     return TRUE;
 }
 
+//键盘钩子回调
 LRESULT CALLBACK KeyboardHookHandle(int nCode, WPARAM wParam, LPARAM lParam)
 {
     if (nCode < 0) {
-        
+        //Microsoft docs规定nCode为0时必须下传消息
         return CallNextHookEx(keyboardHook, nCode, wParam, lParam);
     }
+    //获取虚拟键码
     DWORD vkCode = ((LPKBDLLHOOKSTRUCT)lParam)->vkCode;
 
     //debug下排除delete键
@@ -100,8 +123,10 @@ LRESULT CALLBACK KeyboardHookHandle(int nCode, WPARAM wParam, LPARAM lParam)
     return 1;
 }
 
+//替换原版OpenProcess的函数
 HANDLE WINAPI HookedOpenProcess(DWORD dwDesiredAccess,BOOL bInheritHandle,DWORD dwProcessId)
 {
+    //防杀
     if (dwProcessId != protectedProcessID)
         return (*orginOpenProcess)(dwDesiredAccess, bInheritHandle, dwProcessId);
     return (*orginOpenProcess)(dwDesiredAccess, bInheritHandle, GetCurrentProcessId());
@@ -123,7 +148,7 @@ BOOL WINAPI HookedCreateProcessW(
 
     res = orginCreateProcessW(lpApplicationName, lpCommandLine, lpProcessAttributes, lpThreadAttributes, bInheritHandles,
         dwCreationFlags, lpEnvironment, lpCurrentDirectory, lpStartupInfo, lpProcessInformation);
-
+    //调用原始的CreateProcess函数，若创建进程成功，则注入dll
     if (res != 0) {
         BOOL res;
         res = InstallProcPectHookForProcess(lpProcessInformation->hProcess);
@@ -181,6 +206,7 @@ BOOL WINAPI HookedCreateProcessA(
     return res;
 }
 
+//鼠标钩子回调
 LRESULT CALLBACK MouseHookHandle(int nCode, WPARAM wParam, LPARAM lParam) {
     if (nCode < 0) {
 
@@ -228,7 +254,7 @@ static BOOL InstallProcPectHookForProcess(HANDLE hProcess) {
         return FALSE;
     }
 
-
+    //wchar为2字节，还要加上最后的\0
     WriteProcessMemory(hProcess, llPraram, dllFullPath, wcslen(dllFullPath) * 2 + 2, NULL);
 
     HANDLE hThread = CreateRemoteThread(hProcess, NULL, 0, (LPTHREAD_START_ROUTINE)loadLibraryAddr, llPraram, 0, NULL);
@@ -248,7 +274,9 @@ BOOL InstallProcPectHook()
     WCHAR dirPath[MAX_PATH];
     GetCurrentDirectory(MAX_PATH, dirPath);
 
-    wsprintfW(dllFullPath, L"%ls\\hook.dll", dirPath);
+    wsprintfW(dllFullPath, L"%ls\\"HOOK_DLL_NAME, dirPath);
+
+    /*遍历进程*/
 
     HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
     if (hSnapshot == INVALID_HANDLE_VALUE)
@@ -277,6 +305,8 @@ BOOL InstallProcPectHook()
 }
 
 static BOOL UninstallProcPectHookForProcess(DWORD pid) {
+
+    /*遍历该进程所有dll*/
     HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, pid);
 
     if (hSnapshot == INVALID_HANDLE_VALUE)
@@ -288,7 +318,7 @@ static BOOL UninstallProcPectHookForProcess(DWORD pid) {
     BOOL more = Module32First(hSnapshot, &module);
 
     while (more) {
-        if (lstrcmpW(module.szModule, L"hook.dll") == 0) {
+        if (lstrcmpW(module.szModule, HOOK_DLL_NAME) == 0) {//找到hook.dll
             HANDLE hProcess = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_VM_OPERATION |
                 PROCESS_VM_WRITE | PROCESS_VM_READ, FALSE, pid);
 
@@ -363,8 +393,10 @@ BOOL HookAPI()
     res |= DetourAttach((PVOID)&orginCreateProcessA, (PVOID)HookedCreateProcessA);
     res |= DetourAttach((PVOID)&orginCreateProcessW, (PVOID)HookedCreateProcessW);
 
+#ifdef _DEBUG
     if (res != NO_ERROR)
         MessageBox(NULL, L"Hook api failed", L"Note", 0);
+#endif
     
     DetourTransactionCommit();
     return TRUE;

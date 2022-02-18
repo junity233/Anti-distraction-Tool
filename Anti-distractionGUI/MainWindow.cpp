@@ -5,24 +5,6 @@
 #include "framework.h"
 #include "ProcessTool.h"
 
-static QTime operator + (const QTime& a, const QTime& b) {
-    QTime res;
-    int s = a.second() + b.second();
-    int m = a.minute() + b.minute();
-    int h = a.hour() + b.hour();
-    int ms = a.msec() + b.msec();
-
-    if (ms >= 1000)
-        s += 1, ms -= 1000;
-    if (s >= 60)
-        m += 1, s -= 60;
-    if (m >= 60)
-        h += 1, m -= 60;
-
-    res.setHMS(h, m, s, ms);
-    return res;
-}
-
 static QMap<QString, DWORD> vkcodeMap{
     {"f1",VK_F1},
     {"f2",VK_F2},
@@ -143,7 +125,7 @@ void MainWindow::timerTimeout()
 #endif
    
 
-    if (endTime < QTime::currentTime()) {
+    if (lastTime >= ui.lastTimeEdit->time()) {
         this->Stop();
     }
 }
@@ -166,7 +148,8 @@ void MainWindow::Start()
     }
 
     timer.setInterval(1000 / ui.frequencySpinBox->value());
-    endTime = QTime::currentTime() + ui.lastTimeEdit->time();
+
+    lastTime.restart();
 
     InstallHooks();
 
@@ -287,6 +270,7 @@ void MainWindow::UninstallHooks()
 
 void MainWindow::closeEvent(QCloseEvent* event)
 {
+    //开始后拒绝关闭
     if (isStart) {
         event->ignore();
     }

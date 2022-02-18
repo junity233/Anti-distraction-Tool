@@ -5,6 +5,7 @@
 
 static MainWindow* w=nullptr;
 
+//signal»Øµ÷
 static void terminateSignalHandle(int sign) {
     if(w)
         w->close();
