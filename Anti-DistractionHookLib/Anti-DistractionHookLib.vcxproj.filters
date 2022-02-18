@@ -18,10 +18,24 @@
     <ClInclude Include="framework.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="detours.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="detver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="syelog.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.c">
       <Filter>源文件</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dllexport.def">
+      <Filter>源文件</Filter>
+    </None>
   </ItemGroup>
 </Project>

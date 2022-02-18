@@ -2,10 +2,8 @@
 #include <qevent.h>
 #include <qdebug.h>
 #include <qmessagebox.h>
+#include "framework.h"
 #include "ProcessTool.h"
-
-typedef BOOL(*DllFunc)();
-typedef void (*SetExceptedKeyFunc) (DWORD, BOOL);
 
 static QTime operator + (const QTime& a, const QTime& b) {
     QTime res;
@@ -102,7 +100,6 @@ static QMap<QString, DWORD> vkcodeMap{
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
     timer(this),
-    hookLib("HookLib"),
     settings("config.ini",QSettings::IniFormat)
 {
     ui.setupUi(this);
@@ -122,7 +119,6 @@ MainWindow::MainWindow(QWidget *parent)
         ui.excludedKeysLineEdit->setEnabled(state);
         });
     ui.excludedKeysLineEdit->setEnabled(ui.lockKeyboardCheckBox->isChecked());
-
 }
 
 void MainWindow::timerTimeout()
@@ -179,7 +175,7 @@ void MainWindow::Start()
 }
 
 void MainWindow::startButtonClicked() {
-    WriteSetting();
+    StoreSetting();
     ui.centralWidget->setEnabled(false);
 
     QTime time;
@@ -192,7 +188,7 @@ void MainWindow::startButtonClicked() {
     Start();
 }
 
-void MainWindow::WriteSetting()
+void MainWindow::StoreSetting()
 {
     settings.setValue("last_time", ui.lastTimeEdit->time().toString("hh:mm:ss"));
     settings.setValue("delay", ui.delaySpinBox->value());
@@ -228,73 +224,65 @@ void MainWindow::ShowMsgBox(QString msg)
     );
 }
 
-void MainWindow::InstallMouseHook()
-{
-    DllFunc installMouseHookFunc = (DllFunc)hookLib.resolve("InstallMouseHook");
-    if (installMouseHookFunc) {
-        if (!installMouseHookFunc())
-            ShowMsgBox("Install hook for mouse failed!");
-    }
-    else ShowMsgBox("Load library failed!");
+void MainWindow::LockMouse(){
+    if (!InstallMouseHook())
+        ShowMsgBox("Install hook for mouse failed!");
 }
 
-void MainWindow::UninstallMouseHook()
+void MainWindow::UnlockMouse()
 {
-    DllFunc uninstallMouseHookFunc = (DllFunc)hookLib.resolve("UninstallMouseHook");
-    if (uninstallMouseHookFunc)
-        uninstallMouseHookFunc();
-    else ShowMsgBox("Load library failed!");
+    if (!UninstallMouseHook())
+        ShowMsgBox("Uninstall hook for mouse failed!");
 }
 
-void MainWindow::InstallKeyboardHook()
+void MainWindow::LockKeyboard()
 {
-    DllFunc installHookFunc = (DllFunc)hookLib.resolve("InstallKeyboardHook");
-    SetExceptedKeyFunc setExceptedKeyFunc = (SetExceptedKeyFunc)hookLib.resolve("SetExceptedKey");
-    QFunctionPointer resetExceptedKeysFunc = hookLib.resolve("ResetExceptedKeys");
 
-    if (installHookFunc) {
-        resetExceptedKeysFunc();
+    ResetExceptedKeys();
 
-        QStringList keys = ui.excludedKeysLineEdit->text().split(',');
+    QStringList keys = ui.excludedKeysLineEdit->text().split(',');
 
-        for (auto i : keys) {
-            if (i.size() == 1 && i[0].isLetterOrNumber())
-                setExceptedKeyFunc(i[0].toUpper().toLatin1(), true);
-            else if (vkcodeMap.contains(i))
-                setExceptedKeyFunc(vkcodeMap[i], true);
-            else {
-                ShowMsgBox(tr("Unknown key:%1").arg(i));
-            }
+    for (auto i : keys) {
+        if (i.size() == 1 && i[0].isLetterOrNumber())
+            SetExceptedKey(i[0].toUpper().toLatin1(), true);
+        else if (vkcodeMap.contains(i))
+            SetExceptedKey(vkcodeMap[i], true);
+        else {
+            ShowMsgBox(tr("Unknown key:%1").arg(i));
         }
-
-        if (!installHookFunc())
-            ShowMsgBox("Install hook for keyboard failed!");
     }
-    else ShowMsgBox("Load library failed!");
+
+    if (InstallMouseHook())
+        ShowMsgBox("Install hook for keyboard failed!");
 }
 
-void MainWindow::UninstallKeyboardHook()
+void MainWindow::UnlockKeyboard()
 {
-    DllFunc uninstallHookFunc = (DllFunc)hookLib.resolve("UninstallKeyboardHook");
-    if (uninstallHookFunc)
-        uninstallHookFunc();
-    else ShowMsgBox("Load library failed!");
+    if (!UninstallKeyboardHook())
+        ShowMsgBox("Load library failed!");
 }
 
 void MainWindow::InstallHooks()
 {
-    if (ui.lockKeyboardCheckBox->isChecked())
-        InstallKeyboardHook();
     if (ui.lockMouseCheckBox->isChecked())
-        InstallMouseHook();
+        LockMouse();
+
+    if (ui.lockKeyboardCheckBox->isChecked())
+        LockKeyboard();
+
+    SetPectProcID(GetCurrentProcessId());
+    InstallProcPectHook();
 }
 
 void MainWindow::UninstallHooks()
 {
     if (ui.lockKeyboardCheckBox->isChecked())
-        UninstallKeyboardHook();
+        UnlockKeyboard();
     if (ui.lockMouseCheckBox->isChecked())
-        UninstallMouseHook();
+        UnlockMouse();
+
+    SetPectProcID(NULL);
+    UnnstallProcPectHook();
 }
 
 void MainWindow::closeEvent(QCloseEvent* event)
@@ -302,4 +290,5 @@ void MainWindow::closeEvent(QCloseEvent* event)
     if (isStart) {
         event->ignore();
     }
+    StoreSetting();
 }

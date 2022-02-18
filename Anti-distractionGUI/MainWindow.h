@@ -23,7 +23,6 @@ private:
     QTimer timer;
     QTime endTime;
     QStringList processNames;
-    QLibrary hookLib;
     QSettings settings;
 
     bool isStart=false;
@@ -31,19 +30,20 @@ private:
     void Stop();
     void Start();
 
-    void WriteSetting();
+    void StoreSetting();
     void LoadSetting();
 
     void ShowMsgBox(QString msg);
 
-    void InstallMouseHook();
-    void UninstallMouseHook();
+    void LockMouse();
+    void UnlockMouse();
 
-    void InstallKeyboardHook();
-    void UninstallKeyboardHook();
+    void LockKeyboard();
+    void UnlockKeyboard();
 
     void InstallHooks();
     void UninstallHooks();
+
 protected:
     void closeEvent(QCloseEvent* event);
 };

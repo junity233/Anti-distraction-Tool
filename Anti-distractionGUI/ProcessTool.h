@@ -5,7 +5,6 @@
 class ProcessTool
 {
 public:
-	ProcessTool() { hSnapshot = INVALID_HANDLE_VALUE; };
 	~ProcessTool();
 
 	bool Init();
@@ -21,8 +20,8 @@ public:
 	static bool KillProcess(Process process,UINT exitCode);
 
 private:
-	HANDLE hSnapshot;
-	Process currentProcess;
+	HANDLE hSnapshot = INVALID_HANDLE_VALUE;
+	Process currentProcess = NULL;
 	bool more = true;
 };
 

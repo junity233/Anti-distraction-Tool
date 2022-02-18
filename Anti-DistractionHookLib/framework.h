@@ -4,7 +4,16 @@
 // Windows 头文件
 #include <windows.h>
 
+#ifdef _USRDLL
+
 #define DLLEXPORT _declspec(dllexport) 
+
+#else // DLL
+
+#define DLLEXPORT _declspec(dllimport) 
+
+#endif
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -17,6 +26,11 @@ extern "C" {
 
 	DLLEXPORT BOOL InstallMouseHook();
 	DLLEXPORT BOOL UninstallMouseHook();
+
+	DLLEXPORT BOOL InstallProcPectHook();
+	DLLEXPORT BOOL UnnstallProcPectHook();
+
+	DLLEXPORT void SetPectProcID(DWORD pid);
 
 #ifdef __cplusplus
 }
