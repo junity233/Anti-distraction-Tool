@@ -1,23 +1,28 @@
 # Anti-distraction-Tool
-A simple tool to help you focus on studying. Recommended for use on Online class.
-This tool can lock you mouse/keyboard and kill process that may influence you.
+一个帮助你认真上课的工具。
 
-# Usage
+# 使用方法
 
-## 1.Start Up
- - Time : The duration
+## 1.启动
+ - 时间 : 持续的时间
 
- - Delay : How long to start after clicking the 'Start' button
+ - 延迟 : 点击开始按钮后多久开始——让你有时间打开相关软件
 
- - Start : Click this button to start
+ - 开始 : 点击开始！
 
-## 2.Settings
+## 2.设置
 
-- Frequency : The frequency of the timer 
-- Lock Mouse : Enable/Disable mouse locking
-- Lock Keyboard : Enable/Disable keyboard locking
-- Excluded Keys : Excluded keys in keyboard locking,separated by commas.
-- Kill Tasks : Kill the specified task by name
-- Task To Kill : The names of the tasks to kill,separated by commas
+- 频率 : 计时器的频率（与进程拦截相关）
+- 锁定鼠标 : 是否开启鼠标锁定
+- 锁定键盘 : 是否开启键盘锁定
+- 排除的键 : 键盘中仍然可以使用的键（比如你要暂停啥的）
+- 拦截进程 : 拦截指定进程
+- 要拦截的进程名 : 如名
 
-- Process Exit Code : The exit code sent to the process.
+- 进程的exit code : 杀进程时使用的exit code （没多大用）
+
+# 功能
+
+1. 锁定鼠标/键盘 （Hook实现）
+2. 进程防杀 （Hook实现）
+3. 拦截进程
