@@ -3,7 +3,7 @@
 #include <qdebug.h>
 #include <qmessagebox.h>
 #include "framework.h"
-#include "ProcessTool.h"
+#include "ProcessUtils.h"
 
 static QMap<QString, DWORD> vkcodeMap{
     {"f1",VK_F1},
@@ -89,6 +89,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(&timer, &QTimer::timeout, this, &MainWindow::timerTimeout);
 
+
     connect(ui.killTaskCheckBox, &QCheckBox::stateChanged, [this](int state) {
         ui.taskNameTextEdit->setEnabled(state);
         ui.exitCodeSpinBox->setEnabled(state);
@@ -107,13 +108,13 @@ void MainWindow::timerTimeout()
 {
 
     if (ui.killTaskCheckBox->isChecked()) {
-        ProcessTool processTool;
+        ProcessUtils processTool;
         processTool.Init();
-        ProcessTool::Process process = processTool.GetCurrentProcess();
+        ProcessUtils::Process process = processTool.GetCurrentProcess();
         while (process) {
             QString name = QString::fromWCharArray(process->szExeFile);
             if (processNames.contains(name.toLower())) {
-                ProcessTool::KillProcess(process, ui.exitCodeSpinBox->value());
+                ProcessUtils::KillProcess(process, ui.exitCodeSpinBox->value());
             }
             process = processTool.GetNextProcess();
         }

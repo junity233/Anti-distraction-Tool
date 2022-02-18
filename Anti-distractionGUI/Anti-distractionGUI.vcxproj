@@ -224,7 +224,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ProcessTool.cpp" />
+    <ClCompile Include="ProcessUtils.cpp" />
     <QtRcc Include="MainWindow.qrc" />
     <QtUic Include="MainWindow.ui" />
     <QtMoc Include="MainWindow.h" />
@@ -232,7 +232,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ProcessTool.h" />
+    <ClInclude Include="ProcessUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <QtTranslation Include="zh_cn.ts" />

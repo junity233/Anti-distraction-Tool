@@ -1,12 +1,12 @@
-#include "ProcessTool.h"
+#include "ProcessUtils.h"
 
-ProcessTool::~ProcessTool() {
+ProcessUtils::~ProcessUtils() {
 	if (hSnapshot != INVALID_HANDLE_VALUE) {
 		CloseHandle(hSnapshot);
 	}
 }
 
-bool ProcessTool::Init() {
+bool ProcessUtils::Init() {
 	if (this->hSnapshot != INVALID_HANDLE_VALUE)
 		CloseHandle(hSnapshot);
 	this->hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
@@ -26,7 +26,7 @@ bool ProcessTool::Init() {
 	return true;
 }
 
-ProcessTool::Process ProcessTool::GetNextProcess() {
+ProcessUtils::Process ProcessUtils::GetNextProcess() {
 	if (!more) {
 		CloseHandle(hSnapshot);
 		hSnapshot = INVALID_HANDLE_VALUE;
@@ -36,7 +36,7 @@ ProcessTool::Process ProcessTool::GetNextProcess() {
 	return currentProcess;
 }
 
-bool ProcessTool::KillProcess(Process process,UINT exitCode) {
+bool ProcessUtils::KillProcess(Process process,UINT exitCode) {
 	HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, process->th32ProcessID);
 
 	if (hProcess == INVALID_HANDLE_VALUE) {
