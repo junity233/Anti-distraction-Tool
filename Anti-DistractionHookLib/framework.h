@@ -16,6 +16,8 @@
 
 //dll文件名
 #define HOOK_DLL_NAME L"hook.dll"
+//进程拦截时，最多可以拦截的进程数量
+#define MAX_PROCESS_NAME_NUM 1024
 
 
 #ifdef __cplusplus

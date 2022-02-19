@@ -53,6 +53,13 @@ static BOOL(WINAPI *orginCreateProcessW)(
     LPPROCESS_INFORMATION lpProcessInformation
     ) = CreateProcessW;
 
+/**
+ * @brief Hash字符串
+ * @param str 
+ * @param len 
+ * @return 
+*/
+static ULONG64 hash(LPCSTR str, SIZE_T len);
 
 /**
  * @brief 安装进程防杀到一个进程

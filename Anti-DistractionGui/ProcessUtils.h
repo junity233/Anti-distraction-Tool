@@ -2,10 +2,10 @@
 #include <Windows.h>
 #include <TlHelp32.h>
 
-class ProcessTool
+class ProcessUtils
 {
 public:
-	~ProcessTool();
+	~ProcessUtils();
 
 	bool Init();
 

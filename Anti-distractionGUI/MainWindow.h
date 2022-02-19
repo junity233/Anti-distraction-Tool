@@ -11,7 +11,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = Q_NULLPTR);
+    MainWindow(QWidget* parent = Q_NULLPTR);
 
 private slots:
     void startButtonClicked();
@@ -21,11 +21,18 @@ private:
     Ui::MainWindowClass ui;
 
     QTimer timer;
-    QTime lastTime;//记录已经开始了多久
+    time_t remainTime;//剩余时间，单位ms
     QStringList processNames;
     QSettings settings;
 
-    bool isStart=false;
+    QLabel* remainTimeLabel;
+
+    bool isStart = false;
+
+    /**
+     * @brief 结束用户指定的进程
+    */
+    void killProcess();
 
     void Stop();
     void Start();

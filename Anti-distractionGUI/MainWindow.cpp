@@ -2,8 +2,9 @@
 #include <qevent.h>
 #include <qdebug.h>
 #include <qmessagebox.h>
+
 #include "framework.h"
-#include "ProcessTool.h"
+#include "ProcessUtils.h"
 
 static QMap<QString, DWORD> vkcodeMap{
     {"f1",VK_F1},
@@ -79,16 +80,20 @@ static QMap<QString, DWORD> vkcodeMap{
 
 };
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent),
     timer(this),
-    settings("config.ini",QSettings::IniFormat)
+    settings("config.ini", QSettings::IniFormat)
 {
     ui.setupUi(this);
+    remainTimeLabel = new QLabel(this);
+
+    ui.statusBar->addWidget(remainTimeLabel);
+
     LoadSetting();
 
     connect(&timer, &QTimer::timeout, this, &MainWindow::timerTimeout);
-
+    
     connect(ui.killTaskCheckBox, &QCheckBox::stateChanged, [this](int state) {
         ui.taskNameTextEdit->setEnabled(state);
         ui.exitCodeSpinBox->setEnabled(state);
@@ -103,41 +108,51 @@ MainWindow::MainWindow(QWidget *parent)
     ui.excludedKeysLineEdit->setEnabled(ui.lockKeyboardCheckBox->isChecked());
 }
 
+void MainWindow::killProcess()
+{
+    ProcessUtils processTool;
+    processTool.Init();
+    ProcessUtils::Process process = processTool.GetCurrentProcess();
+    while (process) {
+        QString name = QString::fromWCharArray(process->szExeFile);
+        if (processNames.contains(name.toLower())) {
+            ProcessUtils::KillProcess(process, ui.exitCodeSpinBox->value());
+        }
+        process = processTool.GetNextProcess();
+    }
+}
+
+
 void MainWindow::timerTimeout()
 {
 
-    if (ui.killTaskCheckBox->isChecked()) {
-        ProcessTool processTool;
-        processTool.Init();
-        ProcessTool::Process process = processTool.GetCurrentProcess();
-        while (process) {
-            QString name = QString::fromWCharArray(process->szExeFile);
-            if (processNames.contains(name.toLower())) {
-                ProcessTool::KillProcess(process, ui.exitCodeSpinBox->value());
-            }
-            process = processTool.GetNextProcess();
-        }
-    }
+    if (ui.killTaskCheckBox->isChecked())
+        killProcess();
+
     //Debug下可使用delete键退出，release下删除
 #ifdef _DEBUG
     if (GetKeyState(VK_DELETE) & 0x8000)
         this->Stop();
 #endif
-   
 
-    if (lastTime >= ui.lastTimeEdit->time()) {
+
+    if (remainTime <= 0)
         this->Stop();
-    }
-}
+    else
+        remainTime -= 1000 / ui.frequencySpinBox->value();
 
+    remainTimeLabel->setText(tr("Remain time:%1 s").arg(remainTime / 1000));
+}
 void MainWindow::Stop()
 {
     timer.stop();
-    
+
     UninstallHooks();
 
     isStart = false;
     ui.centralWidget->setEnabled(true);
+
+    remainTimeLabel->setText(tr("Time is up!"));
 }
 
 void MainWindow::Start()
@@ -149,7 +164,8 @@ void MainWindow::Start()
 
     timer.setInterval(1000 / ui.frequencySpinBox->value());
 
-    lastTime.restart();
+    QTime lastTime = ui.lastTimeEdit->time();
+    remainTime = (lastTime.hour() * 3600 + lastTime.minute() * 60 + lastTime.second()) * 1000;
 
     InstallHooks();
 
@@ -161,12 +177,12 @@ void MainWindow::startButtonClicked() {
     StoreSetting();
     ui.centralWidget->setEnabled(false);
 
+    /*先等待一段时间*/
     QTime time;
     time.start();
 
-    while (time.elapsed() < (ui.delaySpinBox->value() * 1000)) {
+    while (time.elapsed() < (ui.delaySpinBox->value() * 1000))
         QCoreApplication::processEvents();
-    }
 
     Start();
 }
@@ -195,7 +211,7 @@ void MainWindow::LoadSetting()
     ui.taskNameTextEdit->setText(settings.value("task_name").toString());
 
     ui.encourageText->setText(settings.value("slogan", "KEEP FINGHTING!").toString());
-    ui.encourageText->setFont(QFont(settings.value("font", "Arial Black").toString(),20, -1, true));
+    ui.encourageText->setFont(QFont(settings.value("font", "Arial Black").toString(), 20, -1, true));
 }
 
 void MainWindow::ShowMsgBox(QString msg)
@@ -207,7 +223,7 @@ void MainWindow::ShowMsgBox(QString msg)
     );
 }
 
-void MainWindow::LockMouse(){
+void MainWindow::LockMouse() {
     if (!InstallMouseHook())
         ShowMsgBox("Install hook for mouse failed!");
 }

@@ -50,7 +50,7 @@
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'" Label="QtSettings">
-    <QtInstall>5.12.12 64bit</QtInstall>
+    <QtInstall>5.12.12 32bit</QtInstall>
     <QtModules>core;gui;widgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
     <QtDeploy>true</QtDeploy>
@@ -62,7 +62,7 @@
     <QtDeploy>true</QtDeploy>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|Win32'" Label="QtSettings">
-    <QtInstall>5.12.12 64bit</QtInstall>
+    <QtInstall>5.12.12 32bit</QtInstall>
     <QtModules>core;gui;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
     <QtDeploy>true</QtDeploy>
@@ -98,24 +98,30 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'">
     <TargetName>Anti-Distraction</TargetName>
     <LibraryPath>$(OutDir);$(LibraryPath)</LibraryPath>
-    <PublicIncludeDirectories>$(PublicIncludeDirectories)</PublicIncludeDirectories>
-    <IncludePath>F:\Anti-distraction\Anti-DistractionHookLib;$(IncludePath)</IncludePath>
+    <PublicIncludeDirectories>$(PublicIncludeDirectories);$(SolutionDir)Anti-DistractionHookLib\</PublicIncludeDirectories>
+    <IncludePath>$(SolutionDir)Anti-DistractionHookLib;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetName>Anti-Distraction</TargetName>
     <LibraryPath>$(OutDir);$(LibraryPath)</LibraryPath>
-    <PublicIncludeDirectories>$(PublicIncludeDirectories)</PublicIncludeDirectories>
-    <IncludePath>F:\Anti-distraction\Anti-DistractionHookLib;$(IncludePath)</IncludePath>
+    <PublicIncludeDirectories>$(PublicIncludeDirectories);$(SolutionDir)Anti-DistractionHookLib\</PublicIncludeDirectories>
+    <IncludePath>$(SolutionDir)Anti-DistractionHookLib;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|Win32'">
     <TargetName>Anti-Distraction</TargetName>
     <LibraryPath>$(OutDir);$(LibraryPath)</LibraryPath>
-    <IncludePath>F:\Anti-distraction\Anti-DistractionHookLib;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Anti-DistractionHookLib;$(IncludePath)</IncludePath>
+    <PublicIncludeDirectories>;$(SolutionDir)Anti-DistractionHookLib\</PublicIncludeDirectories>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <TargetName>Anti-Distraction</TargetName>
     <LibraryPath>$(OutDir);$(LibraryPath)</LibraryPath>
-    <IncludePath>F:\Anti-distraction\Anti-DistractionHookLib;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Anti-DistractionHookLib;$(IncludePath)</IncludePath>
+    <PublicIncludeDirectories>;$(SolutionDir)Anti-DistractionHookLib\</PublicIncludeDirectories>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -131,6 +137,7 @@
     <ClCompile>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <WholeProgramOptimization>true</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>$(SolutionDir)Anti-DistractionHookLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <QtTranslation>
       <BuildAction>lrelease</BuildAction>
@@ -144,6 +151,7 @@
     <ClCompile>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <WholeProgramOptimization>true</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>$(SolutionDir)Anti-DistractionHookLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <QtTranslation>
       <BuildAction>lrelease</BuildAction>
@@ -161,6 +169,9 @@
       <AdditionalDependencies>%(AdditionalDependencies);$(Qt_LIBS_);hook.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
     </Link>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir)Anti-DistractionHookLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <QtTranslation>
@@ -170,6 +181,9 @@
       <AdditionalDependencies>%(AdditionalDependencies);$(Qt_LIBS_);hook.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
     </Link>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir)Anti-DistractionHookLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'" Label="Configuration">
     <ClCompile>
@@ -224,7 +238,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ProcessTool.cpp" />
+    <ClCompile Include="ProcessUtils.cpp" />
     <QtRcc Include="MainWindow.qrc" />
     <QtUic Include="MainWindow.ui" />
     <QtMoc Include="MainWindow.h" />
@@ -232,7 +246,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ProcessTool.h" />
+    <ClInclude Include="ProcessUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <QtTranslation Include="zh_cn.ts" />
