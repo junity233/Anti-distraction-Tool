@@ -4,14 +4,29 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="MainWindow.cpp" line="226"/>
+        <location filename="MainWindow.cpp" line="159"/>
+        <source>Remain time:%1 s</source>
+        <translation>剩余时间:%1 秒</translation>
+    </message>
+    <message>
+        <location filename="MainWindow.cpp" line="166"/>
+        <source>No Window Selected</source>
+        <translation>未选中任何窗口</translation>
+    </message>
+    <message>
+        <location filename="MainWindow.cpp" line="180"/>
+        <source>Time is up!</source>
+        <translation>时间到</translation>
+    </message>
+    <message>
+        <location filename="MainWindow.cpp" line="248"/>
         <source>Note</source>
         <translatorcomment>
 </translatorcomment>
         <translation>提示</translation>
     </message>
     <message>
-        <location filename="MainWindow.cpp" line="266"/>
+        <location filename="MainWindow.cpp" line="277"/>
         <source>Unknown key:%1</source>
         <translation>未知按键:%1</translation>
     </message>
@@ -100,13 +115,67 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="MainWindow.ui" line="198"/>
-        <source>Input the process name like &quot;steam.exe&quot; here</source>
-        <translation>输入要拦截的进程名（例如 steam.exe ）</translation>
+        <source>Input process names like &quot;steam.exe&quot; here</source>
+        <oldsource>Input the process name like &quot;steam.exe&quot; here</oldsource>
+        <translation type="unfinished">输入要拦截的进程名（例如 steam.exe ）</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="207"/>
         <source>Process Exit Code:</source>
         <translation>进程的exit code：</translation>
+    </message>
+    <message>
+        <location filename="MainWindow.ui" line="223"/>
+        <source>Lock Window</source>
+        <translation>锁定窗口</translation>
+    </message>
+    <message>
+        <location filename="MainWindow.ui" line="230"/>
+        <source>Title:</source>
+        <translation>窗口标题：</translation>
+    </message>
+    <message>
+        <location filename="MainWindow.ui" line="237"/>
+        <source>No Window Selected.</source>
+        <translation>没有选中任何窗口</translation>
+    </message>
+    <message>
+        <location filename="MainWindow.ui" line="247"/>
+        <source>Select Window</source>
+        <translation>选择窗口...</translation>
+    </message>
+</context>
+<context>
+    <name>WindowSelectDialog</name>
+    <message>
+        <location filename="SelectWindowDialog.ui" line="14"/>
+        <source>Select Window:</source>
+        <translation>选择窗口：</translation>
+    </message>
+    <message>
+        <location filename="SelectWindowDialog.ui" line="20"/>
+        <source>Click to select</source>
+        <translation>点击选择</translation>
+    </message>
+    <message>
+        <location filename="SelectWindowDialog.ui" line="29"/>
+        <source>Handle:</source>
+        <translation>句柄：</translation>
+    </message>
+    <message>
+        <location filename="SelectWindowDialog.ui" line="43"/>
+        <source>Title :</source>
+        <translation>标题：</translation>
+    </message>
+    <message>
+        <location filename="SelectWindowDialog.ui" line="57"/>
+        <source>Cancel</source>
+        <translation>取消</translation>
+    </message>
+    <message>
+        <location filename="SelectWindowDialog.ui" line="64"/>
+        <source>Confirm</source>
+        <translation>确认</translation>
     </message>
 </context>
 </TS>
