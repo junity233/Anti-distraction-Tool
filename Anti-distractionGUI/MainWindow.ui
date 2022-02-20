@@ -217,6 +217,37 @@ p, li { white-space: pre-wrap; }
          </item>
         </layout>
        </item>
+       <item>
+        <widget class="QCheckBox" name="lockWindowCheckBox">
+         <property name="text">
+          <string>Lock Window</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string>Title:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="windowTitleLineEdit">
+         <property name="text">
+          <string>No Window Selected.</string>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="selectWindowButton">
+         <property name="text">
+          <string>Select Window</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </item>
@@ -245,8 +276,25 @@ p, li { white-space: pre-wrap; }
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>selectWindowButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindowClass</receiver>
+   <slot>selectWindowButtonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>210</x>
+     <y>595</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>210</x>
+     <y>328</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>startButtonClicked()</slot>
+  <slot>selectWindowButtonClicked()</slot>
  </slots>
 </ui>

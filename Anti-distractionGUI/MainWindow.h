@@ -16,6 +16,7 @@ public:
 private slots:
     void startButtonClicked();
     void timerTimeout();
+    void selectWindowButtonClicked();
 
 private:
     Ui::MainWindowClass ui;
@@ -24,6 +25,7 @@ private:
     time_t remainTime;//剩余时间，单位ms
     QStringList processNames;
     QSettings settings;
+    HWND lockedWindow = NULL;
 
     QLabel* remainTimeLabel;
 

@@ -5,6 +5,7 @@
 
 #include "framework.h"
 #include "ProcessUtils.h"
+#include "SelectWindowDialog.h"
 
 static QMap<QString, DWORD> vkcodeMap{
     {"f1",VK_F1},
@@ -97,7 +98,7 @@ MainWindow::MainWindow(QWidget* parent)
     connect(ui.killTaskCheckBox, &QCheckBox::stateChanged, [this](int state) {
         ui.taskNameTextEdit->setEnabled(state);
         ui.exitCodeSpinBox->setEnabled(state);
-        });
+        }); 
 
     ui.taskNameTextEdit->setEnabled(ui.killTaskCheckBox->isChecked());
     ui.exitCodeSpinBox->setEnabled(ui.killTaskCheckBox->isChecked());
@@ -106,6 +107,12 @@ MainWindow::MainWindow(QWidget* parent)
         ui.excludedKeysLineEdit->setEnabled(state);
         });
     ui.excludedKeysLineEdit->setEnabled(ui.lockKeyboardCheckBox->isChecked());
+
+
+    connect(ui.lockWindowCheckBox, &QCheckBox::stateChanged, [this](int state) {
+        ui.windowTitleLineEdit->setEnabled(state);
+        });
+    ui.windowTitleLineEdit->setEnabled(ui.lockWindowCheckBox->isChecked());
 }
 
 void MainWindow::killProcess()
@@ -135,6 +142,14 @@ void MainWindow::timerTimeout()
         this->Stop();
 #endif
 
+    if (ui.lockWindowCheckBox->isChecked()&&lockedWindow!=NULL) {
+        if (!IsZoomed(lockedWindow)) {
+            ShowWindow(lockedWindow, SW_MAXIMIZE);
+            SetWindowPos(lockedWindow, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
+        }
+
+    }
+
 
     if (remainTime <= 0)
         this->Stop();
@@ -142,6 +157,16 @@ void MainWindow::timerTimeout()
         remainTime -= 1000 / ui.frequencySpinBox->value();
 
     remainTimeLabel->setText(tr("Remain time:%1 s").arg(remainTime / 1000));
+}
+void MainWindow::selectWindowButtonClicked()
+{
+    lockedWindow = SelectWindowDialog::SelectWindow(this);
+    ui.windowTitleLineEdit->setText(
+        lockedWindow == NULL ?
+        tr("No Window Selected") :
+        SelectWindowDialog::GetWindowTitle(lockedWindow)
+    );
+
 }
 void MainWindow::Stop()
 {
@@ -196,6 +221,7 @@ void MainWindow::StoreSetting()
     settings.setValue("lock_keyboard", ui.lockKeyboardCheckBox->isChecked());
     settings.setValue("excluded_keys", ui.excludedKeysLineEdit->text());
     settings.setValue("kill_task", ui.killTaskCheckBox->isChecked());
+    settings.setValue("lock_window", ui.lockWindowCheckBox->isChecked());
     settings.setValue("task_name", ui.taskNameTextEdit->toPlainText());
 }
 
@@ -208,6 +234,7 @@ void MainWindow::LoadSetting()
     ui.lockKeyboardCheckBox->setChecked(settings.value("lock_keyboard", true).toBool());
     ui.excludedKeysLineEdit->setText(settings.value("excluded_keys").toString());
     ui.killTaskCheckBox->setChecked(settings.value("kill_task", true).toBool());
+    ui.lockWindowCheckBox->setChecked(settings.value("lock_window", true).toBool());
     ui.taskNameTextEdit->setText(settings.value("task_name").toString());
 
     ui.encourageText->setText(settings.value("slogan", "KEEP FINGHTING!").toString());

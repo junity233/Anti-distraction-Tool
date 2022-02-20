@@ -384,6 +384,13 @@ void SetPectProcID(DWORD pid)
     protectedProcessID = pid;
 }
 
+HWND GetCursorWindows()
+{
+    POINT p;
+    GetCursorPos(&p);
+    return WindowFromPoint(p);
+}
+
 
 BOOL HookAPI()
 {

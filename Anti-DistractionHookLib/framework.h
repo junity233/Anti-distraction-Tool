@@ -74,6 +74,11 @@ extern "C" {
 	 * @return 
 	*/
 	DLLEXPORT void SetPectProcID(DWORD pid);
+	/**
+	 * @brief 获取当前鼠标所在的窗口的句柄
+	 * @return 
+	*/
+	DLLEXPORT HWND GetCursorWindows();
 
 #ifdef __cplusplus
 }

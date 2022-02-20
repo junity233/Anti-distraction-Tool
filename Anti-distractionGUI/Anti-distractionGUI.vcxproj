@@ -239,14 +239,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ProcessUtils.cpp" />
+    <ClCompile Include="SelectWindowDialog.cpp" />
     <QtRcc Include="MainWindow.qrc" />
     <QtUic Include="MainWindow.ui" />
     <QtMoc Include="MainWindow.h" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="main.cpp" />
+    <QtUic Include="SelectWindowDialog.ui" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ProcessUtils.h" />
+    <QtMoc Include="SelectWindowDialog.h" />
   </ItemGroup>
   <ItemGroup>
     <QtTranslation Include="zh_cn.ts" />
