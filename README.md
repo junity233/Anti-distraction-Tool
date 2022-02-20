@@ -124,5 +124,5 @@ static QMap<QString, DWORD> vkcodeMap{
 
 ```
 # 其他
-1. 窗口最上面的那个"KEEP FIGHTING"的标语可以修改，方法是在config.ini中添加一个名为 "slogan" 的字段
+1. 窗口最上面的那个"KEEP FIGHTING"的标语可以修改，方法是在config.ini中添加一个名为 "slogan" 的字段。中文乱码需要将编码设置为带BOM的UTF-8
 2. 还可以添加 "font" 字段来更改字体，默认为"Arial Black"
