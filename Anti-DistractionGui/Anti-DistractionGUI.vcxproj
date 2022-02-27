@@ -59,7 +59,7 @@
     <QtInstall>5.12.12 64bit</QtInstall>
     <QtModules>core;gui;widgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
-    <QtDeploy>true</QtDeploy>
+    <QtDeploy>false</QtDeploy>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|Win32'" Label="QtSettings">
     <QtInstall>5.12.12 32bit</QtInstall>
@@ -249,10 +249,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ProcessUtils.h" />
+    <ClInclude Include="resource.h" />
     <QtMoc Include="SelectWindowDialog.h" />
   </ItemGroup>
   <ItemGroup>
     <QtTranslation Include="zh_cn.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Anti-DistractionGui.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

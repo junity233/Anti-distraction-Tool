@@ -7,11 +7,15 @@
     <x>0</x>
     <y>0</y>
     <width>421</width>
-    <height>658</height>
+    <height>675</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string notr="true">Anti-Distraction</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="MainWindow.qrc">
+    <normaloff>:/MainWindow/icon.ico</normaloff>:/MainWindow/icon.ico</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">

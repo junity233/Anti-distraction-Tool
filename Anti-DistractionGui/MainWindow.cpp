@@ -177,7 +177,7 @@ void MainWindow::Stop()
     isStart = false;
     ui.centralWidget->setEnabled(true);
 
-    remainTimeLabel->setText(tr("Time is up!"));
+    remainTimeLabel->clear();
 }
 
 void MainWindow::Start()
@@ -191,6 +191,7 @@ void MainWindow::Start()
 
     QTime lastTime = ui.lastTimeEdit->time();
     remainTime = (lastTime.hour() * 3600 + lastTime.minute() * 60 + lastTime.second()) * 1000;
+
 
     InstallHooks();
 
@@ -265,7 +266,6 @@ void MainWindow::LockKeyboard()
 {
 
     ResetExceptedKeys();
-
     QStringList keys = ui.excludedKeysLineEdit->text().split(',');
 
     for (auto i : keys) {
@@ -278,7 +278,7 @@ void MainWindow::LockKeyboard()
         }
     }
 
-    if (InstallMouseHook())
+    if (!InstallKeyboardHook())
         ShowMsgBox("Install hook for keyboard failed!");
 }
 
@@ -306,7 +306,7 @@ void MainWindow::UninstallHooks()
         UnlockKeyboard();
     if (ui.lockMouseCheckBox->isChecked())
         UnlockMouse();
-
+    
     SetPectProcID(NULL);
     UnnstallProcPectHook();
 }

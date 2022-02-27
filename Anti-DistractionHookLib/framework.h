@@ -2,7 +2,6 @@
 
 #define WIN32_LEAN_AND_MEAN             // 从 Windows 头文件中排除极少使用的内容
 // Windows 头文件
-#include <windows.h>
 
 #ifdef _USRDLL
 
@@ -13,6 +12,9 @@
 #define DLLEXPORT _declspec(dllimport) 
 
 #endif
+
+typedef int BOOL;
+typedef unsigned long DWORD;
 
 //dll文件名
 #define HOOK_DLL_NAME L"hook.dll"

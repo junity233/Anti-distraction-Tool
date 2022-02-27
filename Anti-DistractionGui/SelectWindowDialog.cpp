@@ -16,12 +16,21 @@ SelectWindowDialog::SelectWindowDialog(QWidget* parent) :
 
 void SelectWindowDialog::OnSelectWindowButtonClicked()
 {
-	Sleep(3000);
-	hWindow = getCursorWindow();
+	QTime t;
+	t.start();
 
+	ui.selectButton->setEnabled(false);
 
-	ui.handleLineEdit->setText("0x" + QString::number((qulonglong)hWindow, 16));
-	ui.titleLineEdit->setText(GetWindowTitle(hWindow));
+	while (t.elapsed() < 3000) {
+		hWindow = getCursorWindow();
+
+		ui.handleLineEdit->setText("0x" + QString::number((qulonglong)hWindow, 16));
+		ui.titleLineEdit->setText(GetWindowTitle(hWindow));
+
+		QCoreApplication::processEvents();
+	}
+
+	ui.selectButton->setEnabled(true);
 
 }
 

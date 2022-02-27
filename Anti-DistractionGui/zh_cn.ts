@@ -117,7 +117,7 @@ p, li { white-space: pre-wrap; }
         <location filename="MainWindow.ui" line="198"/>
         <source>Input process names like &quot;steam.exe&quot; here</source>
         <oldsource>Input the process name like &quot;steam.exe&quot; here</oldsource>
-        <translation type="unfinished">输入要拦截的进程名（例如 steam.exe ）</translation>
+        <translation>输入要拦截的进程名（例如 steam.exe ）</translation>
     </message>
     <message>
         <location filename="MainWindow.ui" line="207"/>

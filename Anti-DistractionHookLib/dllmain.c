@@ -1,4 +1,5 @@
 ﻿// dllmain.cpp : 定义 DLL 应用程序的入口点。
+#include <windows.h>
 #include "framework.h"
 #include "detours.h"
 #include <TlHelp32.h>
@@ -94,12 +95,8 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     case DLL_PROCESS_ATTACH:        
         hins = hModule;
         HookAPI();              //加载DLL时，hook相关API
+        break;
 
-        break;
-    case DLL_THREAD_ATTACH:
-        break;
-    case DLL_THREAD_DETACH:
-        break;
     case DLL_PROCESS_DETACH:
         UnhookAPI();            //卸载时，也卸载API
         break;
