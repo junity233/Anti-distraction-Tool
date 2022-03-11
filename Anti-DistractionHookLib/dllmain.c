@@ -11,13 +11,13 @@ static HHOOK keyboardHook = NULL, mouseHook = NULL;
 
 static HINSTANCE hins = NULL;
 
-#pragma data_seg("shared")                  //设置为共享内存
+#pragma data_seg("shared")
 
 static DWORD protectedProcessID = 0;        //进程防杀主进程的PID——该进程会被保护
 static WCHAR dllFullPath[MAX_PATH] = L"";   //hook.dll的路径（其他进程无法直接获取）
 
 #pragma data_seg()
-#pragma comment(linker, "/SECTION:shared,RWS")
+#pragma comment(linker, "/SECTION:shared,RWS")  //设置为共享内存
 
 
 static BOOL exceptedKeys[0xff];
@@ -212,10 +212,9 @@ BOOL WINAPI HookedCreateProcessA(
 
 //鼠标钩子回调
 LRESULT CALLBACK MouseHookHandle(int nCode, WPARAM wParam, LPARAM lParam) {
-    if (nCode < 0) {
-
+    if (nCode < 0) 
         return CallNextHookEx(keyboardHook, nCode, wParam, lParam);
-    }
+
     return 1;
 }
 
@@ -400,15 +399,10 @@ BOOL HookAPI()
     DetourTransactionBegin();
     DetourUpdateThread(GetCurrentThread());
 
-    res |= DetourAttach((PVOID)&orginOpenProcess, (PVOID)HookedOpenProcess);
-    res |= DetourAttach((PVOID)&orginCreateProcessA, (PVOID)HookedCreateProcessA);
-    res |= DetourAttach((PVOID)&orginCreateProcessW, (PVOID)HookedCreateProcessW);
+    DetourAttach((PVOID)&orginOpenProcess, (PVOID)HookedOpenProcess);
+    DetourAttach((PVOID)&orginCreateProcessA, (PVOID)HookedCreateProcessA);
+    DetourAttach((PVOID)&orginCreateProcessW, (PVOID)HookedCreateProcessW);
 
-#ifdef _DEBUG
-    if (res != NO_ERROR)
-        MessageBox(NULL, L"Hook api failed", L"Note", 0);
-#endif
-    
     DetourTransactionCommit();
     return TRUE;
 }

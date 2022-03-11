@@ -19,6 +19,7 @@ private slots:
     void selectWindowButtonClicked();
 
 private:
+    /*变量们*/
     Ui::MainWindowClass ui;
 
     QTimer timer;
@@ -31,6 +32,8 @@ private:
 
     bool isStart = false;
 
+    /*私有函数*/
+
     /**
      * @brief 结束用户指定的进程
     */
@@ -42,16 +45,20 @@ private:
     void StoreSetting();
     void LoadSetting();
 
+    /**
+     * @brief 对MessageBox的一个封装
+     * @param msg 
+    */
     void ShowMsgBox(QString msg);
 
-    void LockMouse();
-    void UnlockMouse();
+    bool LockMouse();
+    bool UnlockMouse();
 
-    void LockKeyboard();
-    void UnlockKeyboard();
-
-    void InstallHooks();
-    void UninstallHooks();
+    bool LockKeyboard();
+    bool UnlockKeyboard();
+    
+    bool InstallHooks();
+    bool UninstallHooks();
 
 protected:
     void closeEvent(QCloseEvent* event);

@@ -81,6 +81,27 @@ static QMap<QString, DWORD> vkcodeMap{
 
 };
 
+static QString GetWindowsLastErrorMsg()
+{
+    LPWSTR lpMsgBuf = NULL;
+    QString res;
+
+    FormatMessage(
+        FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
+        NULL,
+        GetLastError(),
+        MAKELANGID(LANG_SYSTEM_DEFAULT, SUBLANG_SYS_DEFAULT),
+        (LPWSTR)&lpMsgBuf,
+        0,
+        NULL
+    );
+
+    res = QString::fromWCharArray(lpMsgBuf);
+    LocalFree(lpMsgBuf);
+
+    return res;
+}
+
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent),
     timer(this),
@@ -144,8 +165,9 @@ void MainWindow::timerTimeout()
 
     if (ui.lockWindowCheckBox->isChecked()&&lockedWindow!=NULL) {
         if (!IsZoomed(lockedWindow)) {
+            SetForegroundWindow(lockedWindow);
             ShowWindow(lockedWindow, SW_MAXIMIZE);
-            SetWindowPos(lockedWindow, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
+            //SetWindowPos(lockedWindow, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
         }
 
     }
@@ -193,15 +215,16 @@ void MainWindow::Start()
     remainTime = (lastTime.hour() * 3600 + lastTime.minute() * 60 + lastTime.second()) * 1000;
 
 
-    InstallHooks();
+    if (!InstallHooks())
+        return;
 
+    ui.centralWidget->setEnabled(false);
     isStart = true;
     timer.start();
 }
 
 void MainWindow::startButtonClicked() {
     StoreSetting();
-    ui.centralWidget->setEnabled(false);
 
     /*先等待一段时间*/
     QTime time;
@@ -251,64 +274,97 @@ void MainWindow::ShowMsgBox(QString msg)
     );
 }
 
-void MainWindow::LockMouse() {
-    if (!InstallMouseHook())
-        ShowMsgBox("Install hook for mouse failed!");
+bool MainWindow::LockMouse() {
+    if (!InstallMouseHook()) {
+        ShowMsgBox(tr("Install hook for mouse failed:%1").arg(GetWindowsLastErrorMsg()));
+        return false;
+    }
+    return true;
 }
 
-void MainWindow::UnlockMouse()
+bool MainWindow::UnlockMouse()
 {
-    if (!UninstallMouseHook())
-        ShowMsgBox("Uninstall hook for mouse failed!");
+    if (!UninstallMouseHook()) {
+        ShowMsgBox(tr("Unnstall hook for mouse failed:%1").arg(GetWindowsLastErrorMsg()));
+        return false;
+    }
+    return true;
 }
 
-void MainWindow::LockKeyboard()
+bool MainWindow::LockKeyboard()
 {
 
     ResetExceptedKeys();
-    QStringList keys = ui.excludedKeysLineEdit->text().split(',');
+    QString keysStr = ui.excludedKeysLineEdit->text();
+    QStringList keys = keysStr.split(',');
 
-    for (auto i : keys) {
-        if (i.size() == 1 && i[0].isLetterOrNumber())
-            SetExceptedKey(i[0].toUpper().toLatin1(), true);
-        else if (vkcodeMap.contains(i))
-            SetExceptedKey(vkcodeMap[i], true);
-        else {
-            ShowMsgBox(tr("Unknown key:%1").arg(i));
+    if (!keysStr.isEmpty()) {
+        for (auto i : keys) {
+            if (i.size() == 1 && i[0].isLetterOrNumber())
+                SetExceptedKey(i[0].toUpper().toLatin1(), true);
+            else if (vkcodeMap.contains(i))
+                SetExceptedKey(vkcodeMap[i], true);
+            else {
+                ShowMsgBox(tr("Unknown key:%1").arg(i));
+                return false;
+            }
         }
     }
 
-    if (!InstallKeyboardHook())
-        ShowMsgBox("Install hook for keyboard failed!");
+    if (!InstallKeyboardHook()) {
+        ShowMsgBox(tr("Install hook for keyboard failed:%1").arg(GetWindowsLastErrorMsg()));
+        return false;
+    }
+
+    return true;
 }
 
-void MainWindow::UnlockKeyboard()
+bool MainWindow::UnlockKeyboard()
 {
-    if (!UninstallKeyboardHook())
-        ShowMsgBox("Load library failed!");
+    if (!UninstallKeyboardHook()) {
+        ShowMsgBox(tr("Uninstall hook for keyboard failed:%1").arg(GetWindowsLastErrorMsg()));
+        return false;
+    }
+    return true;
 }
 
-void MainWindow::InstallHooks()
+bool MainWindow::InstallHooks()
 {
+    bool success = true;
     if (ui.lockMouseCheckBox->isChecked())
-        LockMouse();
+        if (!LockMouse())
+            return false;
 
     if (ui.lockKeyboardCheckBox->isChecked())
-        LockKeyboard();
+        if (!LockKeyboard())
+            return false;
 
     SetPectProcID(GetCurrentProcessId());
-    InstallProcPectHook();
+
+    if (!InstallProcPectHook()) {
+        ShowMsgBox(tr("Install process protecting hook failed:%1").arg(GetWindowsLastErrorMsg()));
+        return false;
+    }
+
+    return  true;
 }
 
-void MainWindow::UninstallHooks()
+bool MainWindow::UninstallHooks()
 {
     if (ui.lockKeyboardCheckBox->isChecked())
-        UnlockKeyboard();
+        if (!UnlockKeyboard())
+            return false;
     if (ui.lockMouseCheckBox->isChecked())
-        UnlockMouse();
+        if (!UnlockMouse())
+            return false;
     
     SetPectProcID(NULL);
-    UnnstallProcPectHook();
+    if (!UnnstallProcPectHook()) {
+        ShowMsgBox(tr("Uninstall process protecting hook failed:%1").arg(GetWindowsLastErrorMsg()));
+        return false;
+    }
+
+    return true;
 }
 
 void MainWindow::closeEvent(QCloseEvent* event)

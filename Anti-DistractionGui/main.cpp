@@ -2,6 +2,7 @@
 #include <QtWidgets/QApplication>
 #include <qtranslator.h>
 #include <signal.h>
+#include <qresource.h>
 
 #include "ProcessUtils.h"
 
@@ -34,7 +35,6 @@ int main(int argc, char *argv[])
 
     QApplication a(argc, argv);
 
-    a.setWindowIcon(QIcon("icon.ico"));
     checkIfProcessExist();
 
     QTranslator t;
