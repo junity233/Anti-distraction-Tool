@@ -171,6 +171,7 @@
     </Link>
     <ClCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)Anti-DistractionHookLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/Zo %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -183,6 +184,7 @@
     </Link>
     <ClCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)Anti-DistractionHookLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/Zo %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'" Label="Configuration">
@@ -241,6 +243,7 @@
     <ClCompile Include="FocusBrowser.cpp" />
     <ClCompile Include="ProcessUtils.cpp" />
     <ClCompile Include="SelectWindowDialog.cpp" />
+    <ClCompile Include="TabWidget.cpp" />
     <ClCompile Include="WebBrowser.cpp" />
     <QtRcc Include="MainWindow.qrc" />
     <QtUic Include="FocusBrowser.ui" />
@@ -251,6 +254,7 @@
     <QtUic Include="SelectWindowDialog.ui" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="TabWidget.h" />
     <QtMoc Include="WebBrowser.h" />
     <QtMoc Include="FocusBrowser.h" />
     <ClInclude Include="ProcessUtils.h" />

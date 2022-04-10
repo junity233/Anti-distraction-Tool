@@ -1,10 +1,9 @@
 #pragma once
 #include <qwidget.h>
-#include "WebBrowser.h"
 #include <qlineedit.h>
 #include <qpushbutton.h>
-#include <qstack.h>
-#include <qtabwidget.h>
+
+class TabWidget;
 
 class FocusBrowser :
     public QWidget
@@ -13,22 +12,18 @@ class FocusBrowser :
 public:
     FocusBrowser(QWidget* parent = Q_NULLPTR);
 
-    bool setUrl(const QString & urlStr);
-    void setAllowedDomains(const QString& domains) { allowedDomains = domains.split(";"); }
-
+    TabWidget* getTabWidget() const { return this->tabWidget; };
 
 private slots:
     void goInputUrl();
-    void onBrowserUrlChanged(const QUrl& url);
 
 private:
-    WebBrowser* browser;
     QLineEdit* urlEdit;
     QPushButton* finishedButton;
     QPushButton* backButton;
-    QPushButton* aheadButton;
+    QPushButton* forwardButton;
+    QPushButton* newPageButton;
 
-    QStringList allowedDomains;
-
+    TabWidget* tabWidget;
 };
 

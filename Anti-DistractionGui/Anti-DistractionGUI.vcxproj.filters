@@ -19,6 +19,9 @@
     <ClCompile Include="WebBrowser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TabWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Translation Files">
@@ -59,6 +62,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="WebBrowser.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="TabWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

@@ -6,6 +6,9 @@
 #include "framework.h"
 #include "ProcessUtils.h"
 #include "SelectWindowDialog.h"
+#include "WebBrowser.h"
+#include "FocusBrowser.h"
+#include "TabWidget.h"
 
 static QMap<QString, DWORD> vkcodeMap{
     {"f1",VK_F1},
@@ -105,10 +108,10 @@ static QString GetWindowsLastErrorMsg()
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent),
     timer(this),
-    settings("config.ini", QSettings::IniFormat),
-    browser(this)
+    settings("config.ini", QSettings::IniFormat)
 {
     ui.setupUi(this);
+    browser = new FocusBrowser(this);
     remainTimeLabel = new QLabel(this);
 
     ui.statusBar->addWidget(remainTimeLabel);
@@ -198,7 +201,7 @@ void MainWindow::Stop()
     UninstallHooks();
 
     if (ui.focusBrowserCheckBox->isChecked()) {
-        browser.hide();
+        browser->hide();
     }
 
     isStart = false;
@@ -225,12 +228,13 @@ void MainWindow::Start()
 
     if (ui.focusBrowserCheckBox->isChecked())
     {
-        browser.setAllowedDomains(ui.allowedDomainsEdit->text());
-        browser.setUrl(ui.startUrlEdit->text());
+        browser->getTabWidget()->setDefaultUrl(ui.startUrlEdit->text());
+        browser->getTabWidget()->setAllowedDomainsList(ui.allowedDomainsEdit->text());
+        browser->getTabWidget()->setUrl(ui.startUrlEdit->text());
 #ifdef _DEBUG
-        browser.show();
+        browser->show();
 #else
-        browser.showFullScreen();
+        browser->showFullScreen();
 #endif
     }
 

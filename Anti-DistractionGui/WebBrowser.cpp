@@ -1,4 +1,5 @@
 #include "WebBrowser.h"
+#include "TabWidget.h"
 
 WebBrowser::WebBrowser(QWidget* parent) :
     QWebEngineView(parent)
@@ -10,10 +11,13 @@ WebBrowser::WebBrowser(QWidget* parent) :
 
 QWebEngineView* WebBrowser::createWindow(QWebEnginePage::WebWindowType type)
 {
-    if (type == QWebEnginePage::WebBrowserTab)
-    {
-        setUrl(hoveredLink);
-        return nullptr;
+    switch (type) {
+    case QWebEnginePage::WebBrowserBackgroundTab:
+        return tabWidget->createBackgroundTab();
+    case QWebEnginePage::WebBrowserTab:
+        return tabWidget->createTab();
+    case QWebEnginePage::WebBrowserWindow:
+        return this;
     }
-    return this;
+    return nullptr;
 }
