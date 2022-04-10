@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>421</width>
-    <height>675</height>
+    <height>767</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -249,6 +249,27 @@ p, li { white-space: pre-wrap; }
         <widget class="QPushButton" name="selectWindowButton">
          <property name="text">
           <string>Select Window</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="focusBrowserCheckBox">
+         <property name="text">
+          <string>Focus Browser</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="allowedDomainsEdit">
+         <property name="placeholderText">
+          <string>Allowed url regexp.</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="startUrlEdit">
+         <property name="placeholderText">
+          <string>Start URL.</string>
          </property>
         </widget>
        </item>

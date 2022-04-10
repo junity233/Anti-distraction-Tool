@@ -13,6 +13,12 @@
     <ClCompile Include="SelectWindowDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FocusBrowser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WebBrowser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Translation Files">
@@ -49,6 +55,12 @@
     <QtMoc Include="SelectWindowDialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="FocusBrowser.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="WebBrowser.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ProcessUtils.h">
@@ -63,6 +75,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="MainWindow.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="FocusBrowser.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

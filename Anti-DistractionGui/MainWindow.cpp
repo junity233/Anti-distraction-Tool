@@ -105,7 +105,8 @@ static QString GetWindowsLastErrorMsg()
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent),
     timer(this),
-    settings("config.ini", QSettings::IniFormat)
+    settings("config.ini", QSettings::IniFormat),
+    browser(this)
 {
     ui.setupUi(this);
     remainTimeLabel = new QLabel(this);
@@ -196,6 +197,10 @@ void MainWindow::Stop()
 
     UninstallHooks();
 
+    if (ui.focusBrowserCheckBox->isChecked()) {
+        browser.hide();
+    }
+
     isStart = false;
     ui.centralWidget->setEnabled(true);
 
@@ -217,6 +222,17 @@ void MainWindow::Start()
 
     if (!InstallHooks())
         return;
+
+    if (ui.focusBrowserCheckBox->isChecked())
+    {
+        browser.setAllowedDomains(ui.allowedDomainsEdit->text());
+        browser.setUrl(ui.startUrlEdit->text());
+#ifdef _DEBUG
+        browser.show();
+#else
+        browser.showFullScreen();
+#endif
+    }
 
     ui.centralWidget->setEnabled(false);
     isStart = true;
@@ -247,6 +263,9 @@ void MainWindow::StoreSetting()
     settings.setValue("kill_task", ui.killTaskCheckBox->isChecked());
     settings.setValue("lock_window", ui.lockWindowCheckBox->isChecked());
     settings.setValue("task_name", ui.taskNameTextEdit->toPlainText());
+    settings.setValue("enable_focus_browser", ui.focusBrowserCheckBox->isChecked());
+    settings.setValue("focus_browser_allowed_domain", ui.allowedDomainsEdit->text());
+    settings.setValue("focus_browser_start_url", ui.startUrlEdit->text());
 }
 
 void MainWindow::LoadSetting()
@@ -260,6 +279,9 @@ void MainWindow::LoadSetting()
     ui.killTaskCheckBox->setChecked(settings.value("kill_task", true).toBool());
     ui.lockWindowCheckBox->setChecked(settings.value("lock_window", true).toBool());
     ui.taskNameTextEdit->setText(settings.value("task_name").toString());
+    ui.focusBrowserCheckBox->setChecked(settings.value("enable_focus_browser").toBool());
+    ui.allowedDomainsEdit->setText(settings.value("focus_browser_allowed_domain").toString());
+    ui.startUrlEdit->setText(settings.value("focus_browser_start_url").toString());
 
     ui.encourageText->setText(settings.value("slogan", "KEEP FINGHTING!").toString());
     ui.encourageText->setFont(QFont(settings.value("font", "Arial Black").toString(), 20, -1, true));

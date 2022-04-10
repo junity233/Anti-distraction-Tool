@@ -21,7 +21,6 @@ static WCHAR dllFullPath[MAX_PATH] = L"";   //hook.dll的路径（其他进程�
 
 
 static BOOL exceptedKeys[0xff];
-
 /**
  * 几个API Hook
 */
@@ -54,13 +53,6 @@ static BOOL(WINAPI *orginCreateProcessW)(
     LPPROCESS_INFORMATION lpProcessInformation
     ) = CreateProcessW;
 
-/**
- * @brief Hash字符串
- * @param str 
- * @param len 
- * @return 
-*/
-static ULONG64 hash(LPCSTR str, SIZE_T len);
 
 /**
  * @brief 安装进程防杀到一个进程
@@ -133,7 +125,8 @@ HANDLE WINAPI HookedOpenProcess(DWORD dwDesiredAccess,BOOL bInheritHandle,DWORD 
     //防杀
     if (dwProcessId != protectedProcessID)
         return (*orginOpenProcess)(dwDesiredAccess, bInheritHandle, dwProcessId);
-    return (*orginOpenProcess)(dwDesiredAccess, bInheritHandle, GetCurrentProcessId());
+    SetLastError(ERROR_ACCESS_DENIED);
+    return NULL;
 }
 
 BOOL WINAPI HookedCreateProcessW(
@@ -157,19 +150,9 @@ BOOL WINAPI HookedCreateProcessW(
         BOOL res;
         res = InstallProcPectHookForProcess(lpProcessInformation->hProcess);
 
-#ifdef _DEBUG
-        if (res == FALSE)
-            MessageBox(NULL, L"Hook API failed!", L"Note", 0);
-#endif _DEBUG
     }
 
-#ifdef _DEBUG
-    wchar_t buf[1024];
 
-    wsprintf(buf, L"PectPID:%d\ncommand line:%ws", protectedProcessID, lpCommandLine);
-
-    MessageBoxW(NULL, buf, lpApplicationName, 0);
-#endif
     return res;
 }
 
@@ -194,19 +177,8 @@ BOOL WINAPI HookedCreateProcessA(
         BOOL res;
         res = InstallProcPectHookForProcess(lpProcessInformation->hProcess);
 
-#ifdef _DEBUG
-        if (res == FALSE)
-            MessageBox(NULL, L"Hook API failed!", L"Note", 0);
-#endif
+
     }
-
-#ifdef _DEBUG
-    char buf[1024];
-
-    sprintf_s(buf, 1024, "PectPID:%d\ncommand line:%s", protectedProcessID, lpCommandLine);
-
-    MessageBoxA(NULL, buf, lpApplicationName, 0);
-#endif
     return res;
 }
 
@@ -372,7 +344,7 @@ BOOL UnnstallProcPectHook()
 
         more = Process32Next(hSnapshot, &process);
     }
-    return FALSE;
+    return TRUE;
 }
 
 void SetPectProcID(DWORD pid)

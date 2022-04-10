@@ -5,6 +5,7 @@
 #include <qtimer.h>
 #include <qsettings.h>
 #include "ui_MainWindow.h"
+#include "FocusBrowser.h"
 
 class MainWindow : public QMainWindow
 {
@@ -21,6 +22,8 @@ private slots:
 private:
     /*变量们*/
     Ui::MainWindowClass ui;
+
+    FocusBrowser browser;
 
     QTimer timer;
     time_t remainTime;//剩余时间，单位ms

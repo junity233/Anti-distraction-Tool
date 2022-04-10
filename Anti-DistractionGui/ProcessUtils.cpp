@@ -42,7 +42,7 @@ bool ProcessUtils::KillProcess(Process process,UINT exitCode) {
 	if (hProcess == INVALID_HANDLE_VALUE) {
 		return false;
 	}
-
+	
 	bool res = TerminateProcess(hProcess, exitCode);
 	CloseHandle(hProcess);
 

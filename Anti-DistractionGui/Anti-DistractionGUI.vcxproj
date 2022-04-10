@@ -51,25 +51,25 @@
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'" Label="QtSettings">
     <QtInstall>5.12.12 32bit</QtInstall>
-    <QtModules>core;gui;widgets</QtModules>
+    <QtModules>core;gui;widgets;webenginewidgets;webview;</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
     <QtDeploy>true</QtDeploy>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="QtSettings">
     <QtInstall>5.12.12 64bit</QtInstall>
-    <QtModules>core;gui;widgets</QtModules>
+    <QtModules>core;gui;widgets;webenginewidgets;webview;</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
     <QtDeploy>false</QtDeploy>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|Win32'" Label="QtSettings">
     <QtInstall>5.12.12 32bit</QtInstall>
-    <QtModules>core;gui;widgets</QtModules>
+    <QtModules>core;gui;widgets;webenginewidgets;webview</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
     <QtDeploy>true</QtDeploy>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="QtSettings">
     <QtInstall>5.12.12 64bit</QtInstall>
-    <QtModules>core;gui;widgets</QtModules>
+    <QtModules>core;gui;widgets;webenginewidgets;webview</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
     <QtDeploy>true</QtDeploy>
   </PropertyGroup>
@@ -238,9 +238,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="FocusBrowser.cpp" />
     <ClCompile Include="ProcessUtils.cpp" />
     <ClCompile Include="SelectWindowDialog.cpp" />
+    <ClCompile Include="WebBrowser.cpp" />
     <QtRcc Include="MainWindow.qrc" />
+    <QtUic Include="FocusBrowser.ui" />
     <QtUic Include="MainWindow.ui" />
     <QtMoc Include="MainWindow.h" />
     <ClCompile Include="MainWindow.cpp" />
@@ -248,6 +251,8 @@
     <QtUic Include="SelectWindowDialog.ui" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="WebBrowser.h" />
+    <QtMoc Include="FocusBrowser.h" />
     <ClInclude Include="ProcessUtils.h" />
     <ClInclude Include="resource.h" />
     <QtMoc Include="SelectWindowDialog.h" />
