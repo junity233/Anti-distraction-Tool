@@ -9,6 +9,8 @@
 #include "WebBrowser.h"
 #include "FocusBrowser.h"
 #include "TabWidget.h"
+#include <qwindow.h>
+#include <qdesktopwidget.h>
 
 static QMap<QString, DWORD> vkcodeMap{
     {"f1",VK_F1},
@@ -223,8 +225,10 @@ void MainWindow::Start()
     remainTime = (lastTime.hour() * 3600 + lastTime.minute() * 60 + lastTime.second()) * 1000;
 
 
-    if (!InstallHooks())
+    if (!InstallHooks()) {
+        ShowMsgBox(GetWindowsLastErrorMsg());
         return;
+    }
 
     if (ui.focusBrowserCheckBox->isChecked())
     {
@@ -234,7 +238,7 @@ void MainWindow::Start()
 #ifdef _DEBUG
         browser->show();
 #else
-        browser->showFullScreen();
+        browser->showMaximized();
 #endif
     }
 

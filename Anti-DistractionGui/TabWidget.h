@@ -15,6 +15,7 @@ public:
     WebBrowser* currentWebBrowser() const;
     QUrl currentUrl()const;
     void setDefaultUrl(const QString& url);
+    void closeTab(int index);
 
 public slots:
     bool setUrl(const QString& url);
@@ -24,7 +25,9 @@ public slots:
     WebBrowser* createTab();
     WebBrowser* createBackgroundTab();
 
-    void closeTab(int index);
+
+    void newTab();
+    void closeCurrentTab();
 
     void back();
     void forward();

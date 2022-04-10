@@ -25,5 +25,8 @@ private:
     QPushButton* newPageButton;
 
     TabWidget* tabWidget;
+
+protected:
+    void closeEvent(QCloseEvent* event);
 };
 

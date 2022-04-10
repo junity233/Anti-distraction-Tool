@@ -163,6 +163,16 @@ void TabWidget::closeTab(int index)
     }
 }
 
+void TabWidget::newTab()
+{
+    createTab();
+}
+
+void TabWidget::closeCurrentTab()
+{
+    closeTab(currentIndex());
+}
+
 void TabWidget::back()
 {
     WebBrowser* browser = currentWebBrowser();
